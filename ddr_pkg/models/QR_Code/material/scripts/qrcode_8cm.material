@@ -1,0 +1,14 @@
+material QR/Code_8cm
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture qrcode_r1.png
+			}
+		}
+	}
+}
+
