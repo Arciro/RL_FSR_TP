@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<launch>
+	<arg name="rvizconfig" default="$(find ddr_pkg)/rviz/map.rviz" />
+
+	<include file="$(find ddr_pkg)/launch/joypad.launch" />
+	
+	<include file="$(find ddr_pkg)/launch/gmapping_ddr.launch" />
+
+   <!-- Show in Rviz -->
+   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+</launch>
