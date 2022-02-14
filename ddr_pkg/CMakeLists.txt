@@ -139,6 +139,10 @@ add_executable(ddr_teleop_twist_joy src/joypad_teleop.cpp)
 target_link_libraries(ddr_teleop_twist_joy ${catkin_LIBRARIES})
 
 
+add_executable(planner src/Planning/planner.cpp src/Planning/RRT.cpp src/Planning/Astar.cpp src/Planning/visualize.cpp)
+target_link_libraries(planner ${catkin_LIBRARIES})
+
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/ddr_pkg.cpp
