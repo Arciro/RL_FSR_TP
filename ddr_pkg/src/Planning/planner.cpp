@@ -150,7 +150,7 @@ void RRT_Astar::planner()
 			//display_node(qg);
 		}
 		
-		RRT(Ts, Tg);
+		rrt(Ts, Tg);
 		
 		if(trees_generated)
 			joining_bridge(Ts, Tg);

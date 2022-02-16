@@ -44,9 +44,9 @@ typedef struct{
 struct Nodo{
 	int id;
 	Point2D position;
+	vector<int> adj_list;
 	
 	//fields necessary for A*
-	vector<int> adj_list;
 	bool visited;
 	Nodo* parent;
 	
@@ -104,7 +104,7 @@ class RRT_Astar
 		void run();
 		
 		//RRT methods
-		void RRT(Tree&, Tree&);
+		void rrt(Tree&, Tree&);
 		void generate_tree(Tree&);
 		void find_qnear(Point2D, Nodo&, Tree);
 		void calculate_qnew(Nodo&, Nodo, Point2D, float);

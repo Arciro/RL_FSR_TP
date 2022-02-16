@@ -2,7 +2,7 @@
 
 
 /* *** Funzione che implementa il bi-directional Rapidly-exploring Random Tree *** */
-void RRT_Astar::RRT(Tree& Tstart, Tree& Tgoal)
+void RRT_Astar::rrt(Tree& Tstart, Tree& Tgoal)
 {
 	ros::Rate r(10);
 	//GENERATION TS
@@ -109,88 +109,13 @@ void RRT_Astar::find_qnear(Point2D p, Nodo& qn, Tree t)
 
 
 void RRT_Astar::calculate_qnew(Nodo& new_q, Nodo near_q, Point2D qr, float d)
-{	/*
-	Point2D p1, p2;
-	double dist1, dist2;
-	double m; //angular coefficient
-	double q; //constant term of straight line
-	*/
+{	
 	//declarations of 2 points
 	double x2 = qr.x;
 	double y2 = qr.y;
 	double x1 = near_q.position.x;
 	double y1 = near_q.position.y;
-	/*
-	//coefficients of second order equations
-	double a, b, c;
-	double DELTA;
-	
-	if(x1 != x2)
-	{
-		m = (y2-y1)/(x2-x1);
-		q = -m*x1 + y1;
-		
-		a = 1 + pow(m, 2);
-		b = 2*(m*(q-y1) - x1);
-		c = pow(x1, 2) + pow(q-y1, 2) - pow(d, 2);
-	
-		DELTA = pow(b/2.0, 2) - a*c;
-	
-		if(DELTA >= 0)
-		{
-			p1.x = (-b/2.0 - sqrt(DELTA))/a;
-			p1.y = m*p1.x+q;
-			p2.x = (-b/2.0 + sqrt(DELTA))/a;
-			p2.y = m*p2.x+q;
-		
-			dist1 = get_distance(p1, qr);
-			dist2 = get_distance(p2, qr);
-		
-			if(dist2 >= dist1) //p1 è più vicino a q_rand
-			{
-				new_q.position.x = p1.x;
-				new_q.position.y = p1.y;
-			}//fine 3 if
-		
-			else
-			{
-				new_q.position.x = p2.x;
-				new_q.position.y = p2.y;	
-			}//fine 3 else
-		
-		}//fine 2 if
-		
-		else
-		{
-			ROS_WARN("DELTA negativo!");
-			return;	
-		}//fine 2 else
-		
-	}//fine 1 if
-	
-	else
-	{
-		p1.x = p2.x = near_q.position.x;
-		p1.y = near_q.position.y + d;
-		p2.y = near_q.position.y - d;
-		
-		dist1 = get_distance(p1, qr);
-		dist2 = get_distance(p2, qr);
-		
-		if(dist2 >= dist1) //p1 è più vicino a q_rand
-		{
-			new_q.position.x = p1.x;
-			new_q.position.y = p1.y;
-		}//fine 3 if
-		
-		else
-		{
-			new_q.position.x = p2.x;
-			new_q.position.y = p2.y;	
-		}//fine 3 else
-	
-	}//fine 1 else
-	*/
+
 	
 	double dist;
 	dist = get_distance(qr, near_q.position);
