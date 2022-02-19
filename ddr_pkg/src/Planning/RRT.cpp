@@ -235,7 +235,7 @@ void RRT_Astar::joining_bridge(Tree& tree_start, Tree& tree_goal)
 	bridge.color.b = 0.0;
 	bridge.color.a = 1.0;
 	
-	bridge.lifetime = ros::Duration(20.0);
+	bridge.lifetime = ros::Duration();
 	
 	marker_pub.publish(bridge);
 }

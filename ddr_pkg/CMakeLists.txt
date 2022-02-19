@@ -143,6 +143,10 @@ add_executable(planner src/Planning/planner.cpp src/Planning/RRT.cpp src/Plannin
 target_link_libraries(planner ${catkin_LIBRARIES})
 
 
+add_executable(controller src/Controller/controller.cpp src/Controller/low_level_planning.cpp)
+target_link_libraries(controller ${catkin_LIBRARIES})
+
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/ddr_pkg.cpp

@@ -71,7 +71,7 @@ void RRT_Astar::visualization_arch_node(Nodo q_vicino, Nodo q_nuovo, float red, 
 	
 	id_marker.text = to_string(nodes.id);
 	
-   nodes.lifetime = archs.lifetime = id_marker.lifetime = ros::Duration(20.0);
+   nodes.lifetime = archs.lifetime = id_marker.lifetime = ros::Duration();
 	
 	rviz_marker.markers.push_back(nodes);
    rviz_marker.markers.push_back(archs);
@@ -116,7 +116,7 @@ void RRT_Astar::visualization_minimum_path(Nodo* n, float red, float green, floa
    nodes.color.b = blue;
    nodes.color.a = 1.0;
 	
-   nodes.lifetime = ros::Duration(20.0);
+   nodes.lifetime = ros::Duration();
 
 	marker_pub.publish(nodes);
 }

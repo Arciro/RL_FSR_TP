@@ -1,0 +1,18 @@
+
+#dynamic parameters if differential robot
+wheel_radius: 0.032 #radius of the wheel
+wheel_separtion: 0.045 #distance separation between 2 wheels
+max_angvel_leftwheel: 1.0 #maximum angular velocity of left wheel
+max_angvel_leftwheel: 1.0 #maximum angular velocity of right wheel
+
+#tracking controller I/O feedback linearization 
+#gains
+track_k1: 0.5
+track_k2: 0.5
+
+b: 0.05 #distance on the sagittal axis from wheel centre of unicycle
+
+#posture regulation controller
+#gains
+reg_k1: 2.0
+reg_k2: 2.0

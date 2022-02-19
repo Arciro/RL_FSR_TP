@@ -5,8 +5,8 @@ void RRT_Astar::Astar_search(Tree& N)
 	Tree OPEN;
 	Tree T;
 	
-	Nodo N_best;
-	Nodo Ns, Ng;
+	Nodo N_best; //N_best is the node in OPEN with the minimum value of f 
+	Nodo Ns, Ng; //Node start and goal, corresponding respectively to qs and qg
 	
 	ros::Rate r(10);
 	
@@ -16,7 +16,7 @@ void RRT_Astar::Astar_search(Tree& N)
 	{
 		if(N[i].id == 0)
 		{
-			N[i].visited = true;
+			N[i].visited = true; //all the nodes are initially unvisited , except Ns which is visited
 			N[i].f_Ni = fCost(N[i]);
 			N[i].parent = 0;
 			Ns = N[i];
@@ -26,14 +26,13 @@ void RRT_Astar::Astar_search(Tree& N)
 			Ng = N[i];
 	}
 
-	T.push_back(Ns);
-	OPEN.push_back(Ns);
+	T.push_back(Ns); //at the beginning, T contains only Ns ;
+	OPEN.push_back(Ns); //OPEN is a list of nodes that initially contains only Ns ;
 	
 	int i;
-	while(!OPEN.empty())
+	while(!OPEN.empty()) //repeat until OPEN is empty
 	{			
-		find_extract_Nbest(N_best, OPEN);
-		
+		find_extract_Nbest(N_best, OPEN); //ﬁnd and extract N best from OPEN
 		for(int s=0; s<T.size(); s++)
 			//if(T[s].parent != 0)
 				cout<<T[s].id<<endl;
@@ -62,9 +61,9 @@ void RRT_Astar::Astar_search(Tree& N)
 						N[i].parent = &N[f];
 				
 				//N[i].parent = &N_best;
-				N[i].visited = true;
-				T.push_back(N[i]);
-				OPEN.push_back(N[i]);
+				N[i].visited = true; //mark Ni visited
+				T.push_back(N[i]); //add Ni to T with a pointer toward Nbest
+				OPEN.push_back(N[i]); //insert Ni in OPEN
 				cout<<"Ni: "<<N[i].id<<endl;
 				cout<<"Visited: "<<N[i].visited<<endl;
 				cout<<"Nbest: "<<N_best.id<<endl;
@@ -85,10 +84,10 @@ void RRT_Astar::Astar_search(Tree& N)
 							if(N[f].id == N_best.id)
 								T[k].parent = &N[f];
 				
-				if(!in(N[i], OPEN))
-					OPEN.push_back(N[i]);
+				if(!in(N[i], OPEN)) //if Ni is not in OPEN then
+					OPEN.push_back(N[i]); //insert Ni in OPEN
 
-				else
+				else //else update f(Ni)
 				{
 					for(int k=0; k<T.size(); k++)
 						if(T[k].id == N[i].id)

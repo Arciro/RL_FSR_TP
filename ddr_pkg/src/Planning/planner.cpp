@@ -174,7 +174,7 @@ void RRT_Astar::planner()
 		/*
 		imshow("Display window", img);
 		waitKey(0);*/
-/*
+
 		nav_msgs::Path path;
 		
 		if(!fermo)
@@ -192,7 +192,7 @@ void RRT_Astar::planner()
 		}
 		
 		path_pub.publish(path);
-		qrcode_read = false;*/
+		/*qrcode_read = false;*/
 		r.sleep();
 	}
 	
