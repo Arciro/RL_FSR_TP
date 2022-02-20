@@ -192,8 +192,8 @@ float RRT_Astar::hCost(Nodo N)
 {
 	float h;
 	Point2D end;
-	end.x = destination.x;//final_position.x;
-	end.y = destination.y;//final_position.y;
+	end.x = final_position.x;
+	end.y = final_position.y;
 	h = get_distance(N.position, end);
 	return h;
 }

@@ -7,7 +7,6 @@
 
 #include "std_msgs/String.h"
 #include "geometry_msgs/Pose2D.h"
-#include "geometry_msgs/Twist.h" //to command a velocity to the robot
 #include "geometry_msgs/PoseStamped.h"
 #include "nav_msgs/Odometry.h" //to receive the odometry for current position
 #include "nav_msgs/OccupancyGrid.h"

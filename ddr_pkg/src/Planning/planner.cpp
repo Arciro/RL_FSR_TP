@@ -3,7 +3,7 @@
 RRT_Astar::RRT_Astar()
 {
 	counter = 0;
-	delta = 0.6;
+	delta = 0.7;
 	
 	current_position.x = 0.0;
 	current_position.y = 0.0;
@@ -28,7 +28,7 @@ RRT_Astar::RRT_Astar()
 	
 	odom_sub = nh.subscribe("/ddr/odom", 1, &RRT_Astar::odometry_callback, this);
 	map_sub = nh.subscribe("/map", 1, &RRT_Astar::map_callback, this);
-//	barcode_sub = nh.subscribe("/barcode", 1, &RRT_Astar::barcode_callback, this);
+	barcode_sub = nh.subscribe("/barcode", 1, &RRT_Astar::barcode_callback, this);
 	
 	path_pub = nh.advertise<nav_msgs::Path>("/path", 1);
 	array_marker_pub = nh.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 1);
@@ -58,7 +58,7 @@ void RRT_Astar::map_callback(const nav_msgs::OccupancyGrid::Ptr & map_msg)
 	map_received = true;
 }
 
-/*
+
 
 void RRT_Astar::barcode_callback(const std_msgs::String::Ptr& qrcode)
 {
@@ -68,18 +68,20 @@ void RRT_Astar::barcode_callback(const std_msgs::String::Ptr& qrcode)
 	{
 		destination.x = 1.2;
 		destination.y = 4.0;
+		cout<<" ROOM 1"<<endl;
 	}
 	
 	else if(room == "r2")
 	{
 		destination.x = -1.0;
 		destination.y = 4.0;
+		cout<<" ROOM 2"<<endl;
 	}
 
 	qrcode_read = true;
 }
 
-*/
+
 void RRT_Astar::planner()
 {
 	while(!first_odom && !map_received)	
@@ -118,6 +120,7 @@ void RRT_Astar::planner()
 				{
 					final_position.x = destination.x;
 					final_position.y = destination.y;
+					qrcode_read = false;
 				}
 				
 				else
@@ -144,7 +147,7 @@ void RRT_Astar::planner()
 			qg.visited = false;
 			//qg.position.x = final_position.x;
 			//qg.position.y = final_position.y;
-			qg.position = destination;//final_position;
+			qg.position = final_position;
 			qg.parent = 0;
 			Tg.push_back(qg);
 			//display_node(qg);
@@ -192,7 +195,7 @@ void RRT_Astar::planner()
 		}
 		
 		path_pub.publish(path);
-		/*qrcode_read = false;*/
+
 		r.sleep();
 	}
 	
