@@ -27,6 +27,8 @@
   </include>
 
 	<rosparam command="load" file="$(find ddr_pkg)/config/plan_ctrl_param.yaml" />
+	
+	<!--<rosparam command="load" file="$(find ddr_pkg)/config/ddr_low_control.yaml" /> -->
   
 	<param name="robot_description" command="$(find xacro)/xacro $(arg modello)" />
   	
