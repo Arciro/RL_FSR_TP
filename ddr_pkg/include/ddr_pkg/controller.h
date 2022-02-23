@@ -4,6 +4,7 @@
 #include "ros/ros.h"
 #include "boost/thread.hpp"
 
+#include "std_msgs/Float64.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Point.h"
 #include "geometry_msgs/Pose2D.h"
@@ -28,6 +29,8 @@ class TrackReg
 		ros::Subscriber odom_sub;
 		ros::Subscriber path_sub;
 		ros::Publisher vel_pub;
+		ros::Publisher wR_pub;
+		ros::Publisher wL_pub;
 		
 		nav_msgs::Path path;
 		double theta;
@@ -49,8 +52,6 @@ class TrackReg
 		double reg_k1;
 		double reg_k2;
 		
-		double wR; //angular velocity of right wheel
-		double wL; //angular velocity of left wheel
 		double pW; //wheel radidus
 		double d; //separation distance between wheels
 		

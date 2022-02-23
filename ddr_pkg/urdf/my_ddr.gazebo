@@ -10,14 +10,14 @@
 
 <xacro:arg name="robot_namespace" default="/ddr"/>
 
-  <!-- ros_control plugin 
+  <!-- ros_control plugin -->
   <gazebo>
     <plugin name="gazebo_ros_control"  filename="libgazebo_ros_control.so">
       <robotNamespace>$(arg robot_namespace)</robotNamespace>
       <robotParam>/robot_description</robotParam>
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
-  </gazebo>-->
+  </gazebo>
 
 
   <!--
@@ -60,9 +60,9 @@
   <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
 
-      <robotNamespace>$(arg robot_namespace)</robotNamespace> <!-- una volta specificato qui non lo dovrai 
+      <robotNamespace>$(arg robot_namespace)</robotNamespace> <!--una volta specificato qui non lo dovrai 
       																				poi fare per i topic cmd_vel e odom -->
-      <alwaysOn>true</alwaysOn>
+  <alwaysOn>true</alwaysOn>
       <updateRate>100</updateRate>
       <leftJoint>left_wheel_hinge</leftJoint>
       <rightJoint>right_wheel_hinge</rightJoint>
@@ -71,20 +71,20 @@
       <torque>20</torque>
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
-      <odometryFrame>odom</odometryFrame> <!-- ti conviene metterla sempre come odom-->
+      <odometryFrame>odom</odometryFrame>  <!--ti conviene metterla sempre come odom-->
       <robotBaseFrame>base_footprint</robotBaseFrame> <!--mi raccomando questa scelta influenzerà le successive come terna base-->
-      
+     
       <legacyMode>true</legacyMode>
       <publishOdomTF>true</publishOdomTF>
       <rosDebugLevel>Debug</rosDebugLevel>
       <publishWheelTF>true</publishWheelTF>
       <publishWheelJointState>true</publishWheelJointState>
-      <wheelAcceleration>1</wheelAcceleration><!-- basse accelerazioni impediscono grossi slittamenti -->
+      <wheelAcceleration>1</wheelAcceleration>  <!--basse accelerazioni impediscono grossi slittamenti -->
       <wheelTorque>20</wheelTorque>
       <publishTf>1</publishTf>
       <odometrySource>world</odometrySource>
     </plugin>
-  </gazebo>
+  </gazebo><!---->
 
 <!--  -->
   <gazebo reference="camera_link">

@@ -33,6 +33,10 @@ TrackReg::TrackReg()
 	odom_sub = nh.subscribe("/ddr/odom", 1, &TrackReg::odometry_callback, this);
 	path_sub = nh.subscribe("/path", 1, &TrackReg::path_callback, this);
 	vel_pub = nh.advertise<geometry_msgs::Twist>("/ddr/cmd_vel", 1);
+	
+	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 10);
+	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 10);
+
 }
 
 
@@ -189,8 +193,16 @@ void TrackReg::ctrl_loop()
 			}*/
 		}
 		
-		wR = (2*v + d*w)/(2*pW);
-		wL = (2*v - d*w)/(2*pW);
+		/*
+		std_msgs::Float64 wR; //angular velocity of right wheel
+		std_msgs::Float64 wL; //angular velocity of left wheel
+		
+		wR.data = (2*v + d*w)/(2*pW);
+		wL.data = (2*v - d*w)/(2*pW);
+		
+		wR_pub.publish(wR);
+		wL_pub.publish(wL);
+		*/
 		
 		cmd.linear.x = v;
 		cmd.angular.z = w;

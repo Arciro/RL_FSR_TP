@@ -147,6 +147,10 @@ add_executable(controller src/Controller/controller.cpp src/Controller/low_level
 target_link_libraries(controller ${catkin_LIBRARIES})
 
 
+add_executable(odometry src/odometry.cpp)
+target_link_libraries(odometry ${catkin_LIBRARIES})
+
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/ddr_pkg.cpp
