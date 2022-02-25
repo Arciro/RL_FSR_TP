@@ -25,6 +25,7 @@ class Odom{
 		
 		double pW;
 		double d;
+		double q[2];
 		double wR;
 		double wL;
 
@@ -32,7 +33,7 @@ class Odom{
 		Odom();
 		void run();
 		void range_kutta();
-		void wheels_callback(const sensor_msgs::JointState);
+		void wheels_callback(const sensor_msgs::JointState::ConstPtr&);
 		
 };
 

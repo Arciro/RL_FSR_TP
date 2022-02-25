@@ -34,8 +34,8 @@ TrackReg::TrackReg()
 	path_sub = nh.subscribe("/path", 1, &TrackReg::path_callback, this);
 	vel_pub = nh.advertise<geometry_msgs::Twist>("/ddr/cmd_vel", 1);
 	
-	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 10);
-	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 10);
+	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 20);
+	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 20);
 
 }
 
@@ -193,7 +193,7 @@ void TrackReg::ctrl_loop()
 			}*/
 		}
 		
-		/*
+		
 		std_msgs::Float64 wR; //angular velocity of right wheel
 		std_msgs::Float64 wL; //angular velocity of left wheel
 		
@@ -202,11 +202,11 @@ void TrackReg::ctrl_loop()
 		
 		wR_pub.publish(wR);
 		wL_pub.publish(wL);
-		*/
 		
+		/*
 		cmd.linear.x = v;
 		cmd.angular.z = w;
-		vel_pub.publish(cmd);
+		vel_pub.publish(cmd);*/
 		r.sleep();
 	}
 }

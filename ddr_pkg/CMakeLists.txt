@@ -151,6 +151,13 @@ add_executable(odometry src/odometry.cpp)
 target_link_libraries(odometry ${catkin_LIBRARIES})
 
 
+add_executable(prove src/prova.cpp)
+target_link_libraries(prove ${catkin_LIBRARIES})
+
+
+add_executable(secondOdom src/odom_prova.cpp)
+target_link_libraries(secondOdom ${catkin_LIBRARIES})
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/ddr_pkg.cpp

@@ -1,19 +1,20 @@
-#include "ddr_pkg/odometry.h"
+#include "ros/ros.h"
 
-Odom::Odom()
-{
-	if (!nh.getParam("wheel_radius", pW))
-		pW = 0.032; 
-	
-	if (!nh.getParam("wheel_separation", d))
-		d = 0.045;
-	
-	odom_pub = nh.advertise<nav_msgs::Odometry>("/ddr/odom", 0);
-	wheels_sub = nh.subscribe("/ddr/joint_states", 0, &Odom::wheels_callback, this);
-}
+#include "tf/tf.h"
+#include <tf/transform_broadcaster.h>
+#include "geometry_msgs/Quaternion.h"
+#include "geometry_msgs/TransformStamped.h"
+#include "sensor_msgs/JointState.h" 
+#include "nav_msgs/Odometry.h"
 
+#include <iostream>
+#include <cmath> 
 
-void Odom::wheels_callback(const sensor_msgs::JointState::ConstPtr& wheels_msg)
+using namespace std;
+
+double q[2];
+
+void wheels_callback(const sensor_msgs::JointState::ConstPtr& wheels_msg)
 {
 	for (int i=0; i<2; i++)
 		q[i] = wheels_msg->position[i];
@@ -24,9 +25,27 @@ void Odom::wheels_callback(const sensor_msgs::JointState::ConstPtr& wheels_msg)
 	//cout<<"\n wR: "<<wR;*/
 }
 
-
-void Odom::range_kutta()
+int main(int argc, char** argv)
 {
+	ros::init(argc, argv, "odom_node");
+	ros::NodeHandle nh;
+	ros::Publisher odom_pub;
+	ros::Subscriber wheels_sub;
+		
+	double pW;
+	double d;
+	double wR;
+	double wL;
+	
+	if (!nh.getParam("wheel_radius", pW))
+		pW = 0.032; 
+	
+	if (!nh.getParam("wheel_separation", d))
+		d = 0.045;
+	
+	odom_pub = nh.advertise<nav_msgs::Odometry>("/ddr/odom", 0);
+	wheels_sub = nh.subscribe("/ddr/joint_states", 0, wheels_callback);
+	
 	double freq = 1000;
 	double x0 = 0;
 	double y0 = 0;
@@ -115,25 +134,9 @@ void Odom::range_kutta()
 		odom_pub.publish(odom_msg);
 		last_time = current_time;
 		r.sleep();
+		ros::spinOnce();
 	}
-
-}
-
-
-void Odom::run()
-{
-	boost::thread odometry_thread(&Odom::range_kutta, this);
 	
-	ros::spin();
-}
-
-
-int main(int argc, char** argv)
-{
-	ros::init(argc, argv, "odom_node");
-
-	Odom odometria;
-	odometria.run();
-
+	
 	return 0;
 }
