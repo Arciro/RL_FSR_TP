@@ -25,9 +25,10 @@ class Odom{
 		
 		double pW;
 		double d;
-		double q[2];
-		double wR;
-		double wL;
+		double qL;
+		double qR;
+		
+		bool first_wheel;
 
 	public:
 		Odom();
