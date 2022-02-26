@@ -25,8 +25,12 @@ class Odom{
 		
 		double pW;
 		double d;
+		double q0L;
+		double q0R;
 		double qL;
 		double qR;
+		double wL;
+		double wR;
 		
 		bool first_wheel;
 

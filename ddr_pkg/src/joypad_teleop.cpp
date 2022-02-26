@@ -9,6 +9,8 @@ class TeleopJoypad
 	public:
   		TeleopJoypad();
   		void joypadCallback(const sensor_msgs::Joy::ConstPtr& joy);
+  		double d;
+  		double pW;
   
   	private:
   		ros::NodeHandle nh;
@@ -24,12 +26,16 @@ class TeleopJoypad
 
 TeleopJoypad::TeleopJoypad()
 {
-
 	nh.param("axis_linear", linear_, linear_);
 	nh.param("axis_angular", angular_, angular_);
 	nh.param("scale_angular", a_scale_, a_scale_);
 	nh.param("scale_linear", l_scale_, l_scale_);
-
+	
+	if (!nh.getParam("wheel_radius", pW))
+		pW = 0.032; 
+	
+	if (!nh.getParam("wheel_separation", d))
+		d = 0.130;
 
 	twist_pub = nh.advertise<geometry_msgs::Twist>("ddr/cmd_vel", 1);
 	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 20);
@@ -46,8 +52,6 @@ void TeleopJoypad::joypadCallback(const sensor_msgs::Joy::ConstPtr& joy)
 	std_msgs::Float64 wL; //angular velocity of left wheel
 	
 	double v, w;
-	double pW = 0.032;
-	double d = 0.045;
 	v = l_scale_*joy->axes[linear_];
 	w = a_scale_*joy->axes[angular_];
 	

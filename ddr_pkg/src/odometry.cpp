@@ -6,7 +6,7 @@ Odom::Odom()
 		pW = 0.032; 
 	
 	if (!nh.getParam("wheel_separation", d))
-		d = 0.045;
+		d = 0.130;
 		
 	first_wheel = false;
 	
@@ -20,20 +20,31 @@ void Odom::wheels_callback(const sensor_msgs::JointState::ConstPtr& wheels_msg)
 	qL = wheels_msg->position[0];
 	qR = wheels_msg->position[1];
 	
+	if(!first_wheel)
+	{
+		q0L = wheels_msg->position[0];
+		q0R = wheels_msg->position[1];
+	}
+	
+	wL = wheels_msg->velocity[0];
+	wR = wheels_msg->velocity[1];
+	
 	first_wheel = true;
 }
 
 
 void Odom::range_kutta()
 {
+	while(!first_wheel)	
+		sleep(1);	
+	
 	double freq = 1000;
-	double x0 = y0 = theta0 = 0;
+	double x0, y0, theta0;
+	x0 = y0 = theta0 = 0;
 	
 	double xk = x0;
 	double yk = y0;
 	double thetak = theta0;
-	
-	double qL_prec = qR_prec = 0;
 	
 	double delta_phi_L, delta_phi_R;
 	
@@ -50,19 +61,32 @@ void Odom::range_kutta()
 			
 		cout<<" Ts: "<<Ts<<endl;
 		
-		
 		//calculate linear and angular velocity from right and left wheels' velocities
-		delta_phi_L = qL - qL_prec;
-		wR = (q[1] - q_prec[1])/Ts;
+		delta_phi_L = qL - q0L;
+		delta_phi_R = qR - q0R;
+		q0L = qL;
+		q0R = qR;
+
 		double vk = (pW/2.0)*(wR+wL);
 		double wk = (pW/d)*(wR-wL);
-		for(int j=0; j<2; j++)
-			q_prec[j] = q[j];
+		double delta_s = (pW/2.0)*(delta_phi_R + delta_phi_L);
+		double delta_theta = (pW/d)*(delta_phi_R - delta_phi_L);
+		
+		//exact integration
+		if(delta_theta != 0)
+		{
+			xk = xk + (delta_s/delta_theta)*(sin(thetak + delta_theta) - sin(thetak));
+			yk = yk - (delta_s/delta_theta)*(cos(thetak + delta_theta) - cos(thetak));
+		}
 		
 		//range-kutta
-		xk = xk + vk*Ts*cos(thetak + (wk*Ts)/2.0);
-		yk = yk + vk*Ts*sin(thetak + (wk*Ts)/2.0);
-		thetak = thetak + wk*Ts; //diviso 6?
+		else
+		{
+			xk = xk + delta_s*cos(thetak + (delta_theta)/2.0);
+			yk = yk + delta_s*sin(thetak + (delta_theta)/2.0);
+		}
+		
+		thetak = thetak + delta_theta;
 		
 		if(thetak >= M_PI)
 			thetak = thetak - 2*M_PI;

@@ -82,7 +82,7 @@ int main(int argc, char** argv)
 		//range-kutta
 		xk = xk + vk*Ts*cos(thetak + (wk*Ts)/2.0);
 		yk = yk + vk*Ts*sin(thetak + (wk*Ts)/2.0);
-		thetak = thetak + wk*0.001; //diviso 6?
+		thetak = thetak + wk*Ts; //diviso 6?
 		
 		if(thetak >= M_PI)
 			thetak = thetak - 2*M_PI;

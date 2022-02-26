@@ -10,7 +10,7 @@ TrackReg::TrackReg()
 		pW = 0.032; 
 	
 	if (!nh.getParam("wheel_separation", d))
-		d = 0.045;
+		d = 0.130;
 	
 	if (!nh.getParam("track_k1", track_k1))
 		track_k1 = 0.1;
