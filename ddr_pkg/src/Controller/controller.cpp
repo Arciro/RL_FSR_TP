@@ -10,7 +10,7 @@ TrackReg::TrackReg()
 		pW = 0.032; 
 	
 	if (!nh.getParam("wheel_separation", d))
-		d = 0.130;
+		d = 0.145;
 	
 	if (!nh.getParam("track_k1", track_k1))
 		track_k1 = 0.1;
@@ -30,13 +30,12 @@ TrackReg::TrackReg()
 	t = 0.0;
 	time_traj = 3.0;
 	
-	odom_sub = nh.subscribe("/ddr/odom", 1, &TrackReg::odometry_callback, this);
+	odom_sub = nh.subscribe("/ddr/odom", 0, &TrackReg::odometry_callback, this);
 	path_sub = nh.subscribe("/path", 1, &TrackReg::path_callback, this);
 	vel_pub = nh.advertise<geometry_msgs::Twist>("/ddr/cmd_vel", 1);
 	
 	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 20);
 	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 20);
-
 }
 
 

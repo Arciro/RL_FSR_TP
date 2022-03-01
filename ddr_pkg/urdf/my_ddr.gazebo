@@ -87,7 +87,7 @@
   </gazebo> -->
   
   
-<!--
+<!-- 
   <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
 
@@ -109,7 +109,7 @@
       <rosDebugLevel>Debug</rosDebugLevel>
       <publishWheelTF>true</publishWheelTF>
       <publishWheelJointState>true</publishWheelJointState>
-      <wheelAcceleration>1</wheelAcceleration>    basse accelerazioni impediscono grossi slittamenti 
+      <wheelAcceleration>1</wheelAcceleration>  
     <wheelTorque>20</wheelTorque>
       <publishTf>1</publishTf>
       <odometrySource>world</odometrySource>

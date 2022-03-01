@@ -26,7 +26,7 @@ RRT_Astar::RRT_Astar()
 	string image_path = (path_package + "/maps/scenario.png");
 	img = imread(image_path, IMREAD_COLOR);*/
 	
-	odom_sub = nh.subscribe("/ddr/odom", 1, &RRT_Astar::odometry_callback, this);
+	odom_sub = nh.subscribe("/ddr/odom", 0, &RRT_Astar::odometry_callback, this);
 	map_sub = nh.subscribe("/map", 1, &RRT_Astar::map_callback, this);
 	barcode_sub = nh.subscribe("/barcode", 1, &RRT_Astar::barcode_callback, this);
 	
@@ -97,40 +97,8 @@ void RRT_Astar::planner()
 	final_position.x = destination.x;
 	final_position.y = destination.y;
 	
-	double t = 0.0;
-	bool fermo = false;
-	
 	while(ros::ok())
-	{/*
-		double error = get_distance(current_position, final_position);
-		cout<<" Errore: "<<error<<endl;
-		if(error < 0.05)
-		{
-			fermo = true;
-			t += 0.01;
-			cout<<"\n t: "<<t;
-			if(qrcode_read || t >= 10)
-			{
-				cout<<"\n RRT starts again"<<endl;
-				counter = 0;
-				t = 0.0;
-				fermo = false;
-				
-				if(qrcode_read)
-				{
-					final_position.x = destination.x;
-					final_position.y = destination.y;
-					qrcode_read = false;
-				}
-				
-				else
-				{
-					final_position.x = 2.0;
-					final_position.y = -3.0;
-				}
-			}
-		}*/
-		
+	{		
 		if(counter == 0)
 		{
 			Ts.clear();
@@ -180,19 +148,17 @@ void RRT_Astar::planner()
 
 		nav_msgs::Path path;
 		
-		if(!fermo)
+		for(int k=1; k<=trajectory.size(); k++)
 		{
-			for(int k=1; k<=trajectory.size(); k++)
-			{
-				geometry_msgs::PoseStamped wp;
+			geometry_msgs::PoseStamped wp;
 			
-				wp.pose.position.x = trajectory[trajectory.size()-k].position.x;
-				wp.pose.position.y = trajectory[trajectory.size()-k].position.y;
-				wp.pose.position.z = 0;
+			wp.pose.position.x = trajectory[trajectory.size()-k].position.x;
+			wp.pose.position.y = trajectory[trajectory.size()-k].position.y;
+			wp.pose.position.z = 0;
 			
-				path.poses.push_back(wp);
-			}
+			path.poses.push_back(wp);
 		}
+
 		
 		path_pub.publish(path);
 

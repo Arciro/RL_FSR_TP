@@ -15,7 +15,7 @@ void RRT_Astar::visualization_arch_node(Nodo q_vicino, Nodo q_nuovo, float red, 
    uint32_t text = visualization_msgs::Marker::TEXT_VIEW_FACING;
    
    nodes.header.frame_id = archs.header.frame_id = id_marker.header.frame_id = "map";
-   nodes.header.stamp = archs.header.stamp = id_marker.header.stamp = ros::Time::now();
+   nodes.header.stamp = archs.header.stamp = id_marker.header.stamp = ros::Time::now(); //::now
 
    nodes.ns = archs.ns = id_marker.ns = "graph";
    nodes.id = q_nuovo.id;
@@ -90,7 +90,7 @@ void RRT_Astar::visualization_minimum_path(Nodo* n, float red, float green, floa
 	uint32_t node_shape = visualization_msgs::Marker::SPHERE;
    
    nodes.header.frame_id = "map";
-   nodes.header.stamp = ros::Time::now();
+   nodes.header.stamp = ros::Time::now(); //::now
 
    nodes.ns = "graph";
    nodes.id = n->id + 1000;

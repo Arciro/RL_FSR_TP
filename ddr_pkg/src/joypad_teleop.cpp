@@ -35,7 +35,7 @@ TeleopJoypad::TeleopJoypad()
 		pW = 0.032; 
 	
 	if (!nh.getParam("wheel_separation", d))
-		d = 0.130;
+		d = 0.145;
 
 	twist_pub = nh.advertise<geometry_msgs::Twist>("ddr/cmd_vel", 1);
 	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 20);

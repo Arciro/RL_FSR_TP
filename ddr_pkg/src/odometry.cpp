@@ -6,7 +6,7 @@ Odom::Odom()
 		pW = 0.032; 
 	
 	if (!nh.getParam("wheel_separation", d))
-		d = 0.130;
+		d = 0.145;
 		
 	first_wheel = false;
 	
@@ -48,19 +48,14 @@ void Odom::range_kutta()
 	
 	double delta_phi_L, delta_phi_R;
 	
-	ros::Time current_time, last_time;
+	ros::Time current_time;
 	
 	ros::Rate r(freq);
 	while(ros::ok())
 	{
 		tf::TransformBroadcaster odom_broadcaster;
 		current_time = ros::Time::now();
-		double Ts = (current_time - last_time).toSec();
-		if(Ts == 0)
-			Ts = 1/freq;
-			
-		cout<<" Ts: "<<Ts<<endl;
-		
+
 		//calculate linear and angular velocity from right and left wheels' velocities
 		delta_phi_L = qL - q0L;
 		delta_phi_R = qR - q0R;
@@ -93,8 +88,6 @@ void Odom::range_kutta()
 			
 		else if(thetak <= -M_PI)
 			thetak = thetak + 2*M_PI;
-		
-		cout<<"\n Theta: "<<thetak<<endl;
 		
 		//since all odometry is 6DOF we'll need a quaternion created from yaw
 		geometry_msgs::Quaternion quat_msg;
@@ -136,7 +129,7 @@ void Odom::range_kutta()
 		
 		//publish the message
 		odom_pub.publish(odom_msg);
-		last_time = current_time;
+
 		r.sleep();
 	}
 
