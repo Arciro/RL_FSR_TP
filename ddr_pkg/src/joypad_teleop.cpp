@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include "boost/thread.hpp"
 #include "std_msgs/Float64.h"
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Joy.h>
@@ -9,8 +10,8 @@ class TeleopJoypad
 	public:
   		TeleopJoypad();
   		void joypadCallback(const sensor_msgs::Joy::ConstPtr& joy);
-  		double d;
-  		double pW;
+  		void teleop();
+		void run();
   
   	private:
   		ros::NodeHandle nh;
@@ -21,6 +22,10 @@ class TeleopJoypad
 
   		int linear_, angular_;
   		double l_scale_, a_scale_;
+  		double d;
+  		double pW;
+  		double v;
+  		double w;
 };
 
 
@@ -38,31 +43,50 @@ TeleopJoypad::TeleopJoypad()
 		d = 0.145;
 
 	twist_pub = nh.advertise<geometry_msgs::Twist>("ddr/cmd_vel", 1);
-	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 20);
-	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 20);
+	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 1);
+	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 1);
 
-	joy_sub = nh.subscribe<sensor_msgs::Joy>("joy", 10, &TeleopJoypad::joypadCallback, this);
+	joy_sub = nh.subscribe<sensor_msgs::Joy>("joy", 1, &TeleopJoypad::joypadCallback, this);
 
 }
 
 void TeleopJoypad::joypadCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
 	geometry_msgs::Twist twist;
-	std_msgs::Float64 wR; //angular velocity of right wheel
-	std_msgs::Float64 wL; //angular velocity of left wheel
 	
-	double v, w;
 	v = l_scale_*joy->axes[linear_];
 	w = a_scale_*joy->axes[angular_];
-	
-	wR.data = (2*v + d*w)/(2*pW);
-	wL.data = (2*v - d*w)/(2*pW);
-		
-	wR_pub.publish(wR);
-	wL_pub.publish(wL);
 	/*twist.angular.z = 
 	twist.linear.x = 
 	twist_pub.publish(twist);*/
+}
+
+
+void TeleopJoypad::teleop()
+{
+	ros::Rate r(100);
+
+	while(ros::ok())
+	{
+		std_msgs::Float64 wR; //angular velocity of right wheel
+		std_msgs::Float64 wL; //angular velocity of left wheel
+		wR.data = (2*v + d*w)/(2*pW);
+		wL.data = (2*v - d*w)/(2*pW);
+		
+		wR_pub.publish(wR);
+		wL_pub.publish(wL);
+		r.sleep();
+	}
+
+}
+
+
+void TeleopJoypad::run()
+{
+	boost::thread teleop_thread(&TeleopJoypad::teleop, this);
+	
+	ros::spin();
+
 }
 
 
@@ -70,6 +94,7 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "ddr_joypad_node");
   TeleopJoypad teleop_joypad_ddr;
+  teleop_joypad_ddr.run();
 
-  ros::spin();
+  return 0;
 }

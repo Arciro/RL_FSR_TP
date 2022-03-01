@@ -2,7 +2,7 @@
 
 <launch>
 
-	<node name="odom_node" pkg="ddr_pkg" type="odometry"/>
+	 <!--<node name="odom_node" pkg="ddr_pkg" type="odometry"/>-->
 	<arg name="rvizconfig" default="$(find ddr_pkg)/rviz/navigation.rviz" />
 
 	<include file="$(find ddr_pkg)/launch/amcl_ddr.launch" />
@@ -10,6 +10,6 @@
    <!-- Show in Rviz -->
    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
    
-   <node name="plan_node" pkg="ddr_pkg" type="planner"/>
+   <!--<node name="plan_node" pkg="ddr_pkg" type="planner"/>-->
 
 </launch>

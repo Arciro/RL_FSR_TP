@@ -28,14 +28,14 @@ TrackReg::TrackReg()
 		reg_k2 = 0.1;
 	
 	t = 0.0;
-	time_traj = 3.0;
+	time_traj = 5.0;
 	
 	odom_sub = nh.subscribe("/ddr/odom", 0, &TrackReg::odometry_callback, this);
 	path_sub = nh.subscribe("/path", 1, &TrackReg::path_callback, this);
 	vel_pub = nh.advertise<geometry_msgs::Twist>("/ddr/cmd_vel", 1);
 	
-	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 20);
-	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 20);
+	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 0);
+	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 0);
 }
 
 

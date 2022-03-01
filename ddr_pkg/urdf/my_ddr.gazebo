@@ -87,7 +87,7 @@
   </gazebo> -->
   
   
-<!-- 
+<!--  
   <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
 
@@ -114,7 +114,7 @@
       <publishTf>1</publishTf>
       <odometrySource>world</odometrySource>
     </plugin>
-  </gazebo> -->
+  </gazebo>-->
 
 <!--  -->
   <gazebo reference="camera_link">
