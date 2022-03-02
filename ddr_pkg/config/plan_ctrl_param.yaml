@@ -1,7 +1,7 @@
 
 #dynamic parameters if differential robot
 wheel_radius: 0.032 #radius of the wheel
-wheel_separtion: 0.145 #distance separation between 2 wheels
+wheel_separtion: 0.142 #distance separation between 2 wheels
 max_angvel_leftwheel: 1.0 #maximum angular velocity of left wheel
 max_angvel_leftwheel: 1.0 #maximum angular velocity of right wheel
 

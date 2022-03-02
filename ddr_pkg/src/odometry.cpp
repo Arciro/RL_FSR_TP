@@ -6,7 +6,7 @@ Odom::Odom()
 		pW = 0.032; 
 	
 	if (!nh.getParam("wheel_separation", d))
-		d = 0.145;
+		d = 0.142;
 		
 	first_wheel = false;
 	
@@ -53,7 +53,7 @@ void Odom::range_kutta()
 	ros::Rate r(freq);
 	while(ros::ok())
 	{
-		tf::TransformBroadcaster odom_broadcaster;
+		static tf::TransformBroadcaster odom_broadcaster;
 		current_time = ros::Time::now();
 
 		//calculate linear and angular velocity from right and left wheels' velocities
@@ -73,7 +73,7 @@ void Odom::range_kutta()
 			xk = xk + (delta_s/delta_theta)*(sin(thetak + delta_theta) - sin(thetak));
 			yk = yk - (delta_s/delta_theta)*(cos(thetak + delta_theta) - cos(thetak));
 		}
-		
+
 		//range-kutta
 		else
 		{
