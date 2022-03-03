@@ -144,7 +144,7 @@ void TrackReg::ctrl_loop()
 				v = 0.0;
       		w = reg_k2*gamma + reg_k1*sin(gamma)*cos(gamma);
       	
-      		if(fabs(gamma) < 0.2)
+      		if(fabs(gamma) < 0.1)
       			move = true;
 			
 				t = 0.0;

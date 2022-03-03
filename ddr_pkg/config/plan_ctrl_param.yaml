@@ -14,5 +14,5 @@ b: 0.05 #distance on the sagittal axis from wheel centre of unicycle
 
 #posture regulation controller
 #gains
-reg_k1: 0.2
-reg_k2: 0.2
+reg_k1: 0.1
+reg_k2: 0.07

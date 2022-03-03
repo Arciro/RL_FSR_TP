@@ -92,7 +92,7 @@ void Odom::wheels_callback(const sensor_msgs::JointState::ConstPtr& wheels_msg)
 		yk = yk - (delta_s/delta_theta)*(cos(thetak + delta_theta) - cos(thetak));
 	}
 
-		//range-kutta
+	//range-kutta
 	else
 	{
 		xk = xk + delta_s*cos(thetak + (delta_theta)/2.0);

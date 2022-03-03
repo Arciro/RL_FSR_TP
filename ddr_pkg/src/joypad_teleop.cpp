@@ -20,10 +20,8 @@ class TeleopJoypad
 
   		int linear_, angular_;
   		double l_scale_, a_scale_;
-  		double d;
-  		double pW;
-  		double v;
-  		double w;
+  		double d, pW;
+  		double v, w;
 };
 
 
@@ -43,7 +41,7 @@ TeleopJoypad::TeleopJoypad()
 	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 0);
 	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 0);
 
-	joy_sub = nh.subscribe<sensor_msgs::Joy>("joy", 1, &TeleopJoypad::joypadCallback, this);
+	joy_sub = nh.subscribe<sensor_msgs::Joy>("joy", 0, &TeleopJoypad::joypadCallback, this);
 
 }
 
@@ -89,7 +87,6 @@ void TeleopJoypad::run()
 	boost::thread teleop_thread(&TeleopJoypad::teleop, this);
 	
 	ros::spin();
-
 }
 
 
