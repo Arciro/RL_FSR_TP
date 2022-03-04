@@ -36,6 +36,8 @@ TrackReg::TrackReg()
 	
 	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 0);
 	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 0);
+	
+	client = nh.serviceClient<ddr_pkg::ctrl_to_plan>("ctrl_finished_topic");
 }
 
 
@@ -86,6 +88,7 @@ void TrackReg::ctrl_loop()
 	
 	bool move = false;
 	bool finish = false;
+	bool msg2plan;
 	
 	int wp_index = 0;
 	
@@ -105,6 +108,7 @@ void TrackReg::ctrl_loop()
 		
 		if((wp_index < wp_list.size()-1) && !finish)
 		{
+			msg2plan = false;
 			xi = wp_list[wp_index].x;
 			yi = wp_list[wp_index].y;
 			xf = wp_list[wp_index+1].x;
@@ -141,7 +145,7 @@ void TrackReg::ctrl_loop()
 				v = 0.0;
       		w = reg_k2*gamma + reg_k1*sin(gamma)*cos(gamma);
       	
-      		if(fabs(gamma) < 0.1)
+      		if(fabs(gamma) < 0.15)
       			move = true;
 			
 				t = 0.0;
@@ -185,13 +189,26 @@ void TrackReg::ctrl_loop()
 			v = 0.0;
       	w = reg_k2*gamma + reg_k1*sin(gamma)*cos(gamma);
       	
-      	if(fabs(gamma) < 0.1)
-      		w = 0.0;
+      	if(fabs(w) < 0.01)
+      	{
+      		if(!msg2plan)
+      		{
+      			msg2plan = true;
+      			ddr_pkg::ctrl_to_plan srv;
+      			srv.request.goal_achieved = true;
+      			if(client.call(srv))
+      				cout<<"\n Il controller è terminato, ora tocca al planner."<<endl;
+      				
+      			else
+						ROS_ERROR("Fallimento nel chiamare il service");
+						
+					finish = false;
+      		}
+      	}
 			
 			t = 0.0;
 		}
-		
-		
+
 		std_msgs::Float64 wR; //angular velocity of right wheel
 		std_msgs::Float64 wL; //angular velocity of left wheel
 		

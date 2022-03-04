@@ -3,7 +3,7 @@
 RRT_Astar::RRT_Astar()
 {
 	counter = 0;
-	delta = 0.7;
+	delta = 0.8;
 	
 	current_position.x = 0.0;
 	current_position.y = 0.0;
@@ -15,6 +15,7 @@ RRT_Astar::RRT_Astar()
 	map_received = false;
 	trees_generated = false;
 	qrcode_read = false;
+	srv.request.goal_achieved = false;
 	
 	map_height = 608;
 	map_width = 512;
@@ -33,6 +34,8 @@ RRT_Astar::RRT_Astar()
 	path_pub = nh.advertise<nav_msgs::Path>("/path", 1);
 	array_marker_pub = nh.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 1);
 	marker_pub = nh.advertise<visualization_msgs::Marker>("visualization_marker", 1);
+	
+	server = nh.advertiseService("ctrl_finished_topic", &RRT_Astar::ctrl2plan_callback, this);
 }
 
 
@@ -82,6 +85,19 @@ void RRT_Astar::barcode_callback(const std_msgs::String::Ptr& qrcode)
 }
 
 
+bool RRT_Astar::ctrl2plan_callback(ddr_pkg::ctrl_to_plan::Request &req, ddr_pkg::ctrl_to_plan::Response &res)
+{
+	res.plan_run = "Dato che il controller ha finito, il planner puo' ripartire";
+	if(req.goal_achieved)
+		cout<<"\n "<<res.plan_run<<endl;
+
+	srv.request.goal_achieved = req.goal_achieved;
+	
+	return true;
+}
+
+
+
 void RRT_Astar::planner()
 {
 	while(!first_odom && !map_received)	
@@ -99,6 +115,31 @@ void RRT_Astar::planner()
 	
 	while(ros::ok())
 	{		
+		if(qrcode_read)
+		{
+			qrcode_read = false;
+			cout<<" QR-code letto"<<endl;
+			if(srv.request.goal_achieved)
+			{
+				cout<<" Obiettivo raggiunto"<<endl;
+				srv.request.goal_achieved = false;
+				final_position = destination;
+				counter = 0;
+			}
+		}
+		
+		else
+		{
+			if(srv.request.goal_achieved)
+			{
+				srv.request.goal_achieved = false;
+				final_position.x = 2.0;
+				final_position.y = -3.0;
+				counter = 0;
+			}
+		}
+			
+	
 		if(counter == 0)
 		{
 			Ts.clear();
@@ -120,6 +161,8 @@ void RRT_Astar::planner()
 			Tg.push_back(qg);
 			//display_node(qg);
 		}
+		cout<<" Punto iniziale: "<<qs.position.x<<" "<<qs.position.y<<endl;
+		cout<<" Punto finale: "<<qg.position.x<<" "<<qg.position.y<<endl;
 		
 		rrt(Ts, Tg);
 		

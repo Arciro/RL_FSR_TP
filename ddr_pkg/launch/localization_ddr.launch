@@ -10,6 +10,8 @@
    <!-- Show in Rviz -->
    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
    
-   <!--<node name="plan_node" pkg="ddr_pkg" type="planner"/>-->
+   <node pkg="zbar_ros" type="barcode_reader_node" name="barcode_reader">
+		<param name="throttle_repeated_barcodes" type="double" value="2.0"/>
+	</node>
 
 </launch>

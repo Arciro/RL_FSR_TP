@@ -8,8 +8,6 @@ project(ddr_pkg)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  actionlib
-  actionlib_msgs
   cv_bridge
   geometry_msgs
   image_transport
@@ -68,11 +66,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+ add_service_files(
+   FILES
+   ctrl_to_plan.srv
+ )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -82,10 +79,12 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   actionlib_msgs#   geometry_msgs#   nav_msgs#   sensor_msgs#   std_msgs#   visualization_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   geometry_msgs
+   nav_msgs
+   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##

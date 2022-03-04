@@ -12,6 +12,8 @@
 #include "nav_msgs/Path.h"
 #include "tf/tf.h"
 
+#include "ddr_pkg/ctrl_to_plan.h"
+
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -31,6 +33,7 @@ class TrackReg
 		ros::Publisher vel_pub;
 		ros::Publisher wR_pub;
 		ros::Publisher wL_pub;
+		ros::ServiceClient client;
 		
 		nav_msgs::Path path;
 		double theta;

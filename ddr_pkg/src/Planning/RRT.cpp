@@ -30,7 +30,7 @@ void RRT_Astar::rrt(Tree& Tstart, Tree& Tgoal)
 void RRT_Astar::generate_tree(Tree& albero)
 {
 	random_device rd;
-	uniform_int_distribution<int> dist(-200, 200);
+	uniform_int_distribution<int> dist(-100, 100);
 
 	Point2D q_rand;
 	Nodo q_near, q_new;

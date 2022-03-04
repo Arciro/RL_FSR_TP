@@ -26,6 +26,7 @@
 #include <vector>
 #include <random> 
 
+#include "ddr_pkg/ctrl_to_plan.h"
 
 #define MAX_NUM_ITERATIONS 10
 
@@ -71,6 +72,9 @@ class RRT_Astar
 		ros::Publisher marker_pub;
 		ros::Publisher path_pub;
 		
+		ros::ServiceServer server;
+		ddr_pkg::ctrl_to_plan srv;
+		
 		string room;
 		
 		nav_msgs::OccupancyGrid::Ptr map;
@@ -99,6 +103,7 @@ class RRT_Astar
 		void barcode_callback(const std_msgs::String::Ptr&);
 		void odometry_callback(nav_msgs::Odometry);
 		void map_callback(const nav_msgs::OccupancyGrid::Ptr&);
+		bool ctrl2plan_callback(ddr_pkg::ctrl_to_plan::Request&, ddr_pkg::ctrl_to_plan::Response&);
 		void planner();
 		void run();
 		
