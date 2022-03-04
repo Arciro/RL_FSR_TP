@@ -10,7 +10,7 @@ TrackReg::TrackReg()
 		pW = 0.032; 
 	
 	if (!nh.getParam("wheel_separation", d))
-		d = 0.145;
+		d = 0.142;
 	
 	if (!nh.getParam("track_k1", track_k1))
 		track_k1 = 0.1;
@@ -100,10 +100,7 @@ void TrackReg::ctrl_loop()
 	
 		double gamma;
 		
-		geometry_msgs::Twist cmd;
-		double v;
-		double w;
-		
+		double v, w;		
 		double norma, err;
 		
 		if((wp_index < wp_list.size()-1) && !finish)
@@ -132,7 +129,7 @@ void TrackReg::ctrl_loop()
 			{
 				cout<<" REGULATION"<<endl;
 				gamma = atan2(wp_list[wp_index+1].y - wp_list[wp_index].y, wp_list[wp_index+1].x - wp_list[wp_index].x) - theta;
-				//---check the rotation with smaller motion    
+				    
    			if (fabs(gamma) > M_PI) 
   				{
 					if(gamma > 0.0) 
@@ -174,22 +171,24 @@ void TrackReg::ctrl_loop()
 		
 		else
 		{
-			cout<<" SI RUOTA!!!!"<<endl;
+			cout<<" FINAL REGULATION"<<endl;
+			gamma = atan2(0, 1) - theta;
+				    
+   		if (fabs(gamma) > M_PI) 
+  			{
+				if(gamma > 0.0) 
+					gamma = gamma - 2*M_PI;
+      		else 
+      			gamma = gamma + 2*M_PI;
+			}	
+
 			v = 0.0;
-			w = M_PI/2;
-			//t += 0.01;
-			//cout<<" t: "<<t<<endl;
-			/*
-			if(t >= 8)
-			{
-				cout<<" SI RICOMINCIA DA ZERO"<<endl;
-				v = w = 0.0;
-				if(path_received && t>=10)
-				{
-					wp_index = 0;
-					t = 0.0;
-				}
-			}*/
+      	w = reg_k2*gamma + reg_k1*sin(gamma)*cos(gamma);
+      	
+      	if(fabs(gamma) < 0.1)
+      		w = 0.0;
+			
+			t = 0.0;
 		}
 		
 		
@@ -203,6 +202,7 @@ void TrackReg::ctrl_loop()
 		wL_pub.publish(wL);
 		
 		/*
+		geometry_msgs::Twist cmd;
 		cmd.linear.x = v;
 		cmd.angular.z = w;
 		vel_pub.publish(cmd);*/

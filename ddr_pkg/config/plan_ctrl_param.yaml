@@ -10,9 +10,9 @@ max_angvel_leftwheel: 1.0 #maximum angular velocity of right wheel
 track_k1: 0.1
 track_k2: 0.1
 
-b: 0.05 #distance on the sagittal axis from wheel centre of unicycle
+b: 0.01 #distance on the sagittal axis from wheel centre of unicycle
 
 #posture regulation controller
 #gains
 reg_k1: 0.1
-reg_k2: 0.07
+reg_k2: 0.1

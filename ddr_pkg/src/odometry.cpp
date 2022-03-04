@@ -89,7 +89,7 @@ void Odom::range_kutta()
 		else if(thetak <= -M_PI)
 			thetak = thetak + 2*M_PI;
 		
-		cout<<" Theta: "<<thetak<<endl;
+		//cout<<" Theta: "<<thetak<<endl;
 		
 		//since all odometry is 6DOF we'll need a quaternion created from yaw
 		geometry_msgs::Quaternion quat_msg;
