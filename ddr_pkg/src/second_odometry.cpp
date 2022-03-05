@@ -27,6 +27,8 @@ class Odom{
 		double yk;
 		double thetak;
 		bool first_wheel;
+		
+		ros::Time current_time;
 
 	public:
 		Odom();
@@ -71,7 +73,7 @@ void Odom::wheels_callback(const sensor_msgs::JointState::ConstPtr& wheels_msg)
 	
 	double delta_phi_L, delta_phi_R;
 	
-	ros::Time current_time = ros::Time::now();
+	current_time = ros::Time::now();
 	static tf::TransformBroadcaster odom_broadcaster;
 
 	//calculate linear and angular velocity from right and left wheels' velocities

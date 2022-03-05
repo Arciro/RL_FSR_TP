@@ -50,6 +50,11 @@ void RRT_Astar::visualization_arch_node(Nodo q_vicino, Nodo q_nuovo, float red, 
    
    archs.points.push_back(p1);
    archs.points.push_back(p2);
+   
+   archs.pose.orientation.x = 0.0;
+   archs.pose.orientation.y = 0.0;
+   archs.pose.orientation.z = 0.0;
+   archs.pose.orientation.w = 1.0;
 
    archs.scale.x = 0.05;
    archs.scale.y = 0.1;

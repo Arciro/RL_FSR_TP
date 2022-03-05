@@ -230,6 +230,11 @@ void RRT_Astar::joining_bridge(Tree& tree_start, Tree& tree_goal)
   	bridge.scale.y = 0.1;
    bridge.scale.z = 0.1;
    
+   bridge.pose.orientation.x = 0.0;
+   bridge.pose.orientation.y = 0.0;
+   bridge.pose.orientation.z = 0.0;
+   bridge.pose.orientation.w = 1.0;
+   
    bridge.color.r = 0.0;
 	bridge.color.g = 1.0;
 	bridge.color.b = 0.0;

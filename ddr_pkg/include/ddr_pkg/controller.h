@@ -13,13 +13,12 @@
 #include "tf/tf.h"
 
 #include "ddr_pkg/ctrl_to_plan.h"
+#include "ddr_pkg/plan_to_ctrl.h"
 
 #include <iostream>
 #include <cmath>
 #include <vector>
 
-#define V_MAX 0.5
-#define W_MAX 2.0
 
 using namespace std;
 
@@ -34,8 +33,8 @@ class TrackReg
 		ros::Publisher wR_pub;
 		ros::Publisher wL_pub;
 		ros::ServiceClient client;
+		ros::ServiceServer server;
 		
-		nav_msgs::Path path;
 		double theta;
 		
 		bool first_odom;
@@ -59,11 +58,13 @@ class TrackReg
 		double d; //separation distance between wheels
 		
 		vector<geometry_msgs::Point> wp_list;
+		int wp_index;
 	
 	public:
 		TrackReg();
 		void odometry_callback(nav_msgs::Odometry);
-		void path_callback(nav_msgs::Path);
+		//void path_callback(nav_msgs::Path);
+		bool path_callback(ddr_pkg::plan_to_ctrl::Request&, ddr_pkg::plan_to_ctrl::Response&);
 	
 		void tvp(double, double, double, double&, double&); //trapezoidal velocity profile
 		

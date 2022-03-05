@@ -196,7 +196,7 @@
     </sensor>
   </gazebo>
 
-  <!-- IMU plugin 
+  <!-- IMU plugin -->
   <gazebo>
     <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
       <alwaysOn>true</alwaysOn>
@@ -206,6 +206,6 @@
       <gaussianNoise>0.0</gaussianNoise>
       <updateRate>20.0</updateRate>
     </plugin>
-  </gazebo>-->
+  </gazebo>
 
 </robot>

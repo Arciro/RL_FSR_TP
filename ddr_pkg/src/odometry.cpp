@@ -9,9 +9,11 @@ Odom::Odom()
 		d = 0.142;
 		
 	first_wheel = false;
+	thetak = 0.0;
 	
 	odom_pub = nh.advertise<nav_msgs::Odometry>("/ddr/odom", 0);
 	wheels_sub = nh.subscribe("/ddr/joint_states", 0, &Odom::wheels_callback, this);
+	imu_sub = nh.subscribe("/ddr/imu", 0, &Odom::imu_callback, this);
 }
 
 
@@ -33,18 +35,36 @@ void Odom::wheels_callback(const sensor_msgs::JointState::ConstPtr& wheels_msg)
 }
 
 
+void Odom::imu_callback(const sensor_msgs::Imu::ConstPtr &imu_msg)
+{
+	double x = imu_msg->orientation.x;
+	double y = imu_msg->orientation.y;
+	double z = imu_msg->orientation.z;
+	double w = imu_msg->orientation.w;
+	tf::Quaternion q(x, y, z, w);
+	
+	double roll, pitch;
+	tf::Matrix3x3(q).getRPY(roll, pitch, thetak);
+	
+	if(thetak >= M_PI)
+		thetak = thetak - 2*M_PI;
+			
+	else if(thetak <= -M_PI)
+		thetak = thetak + 2*M_PI;
+}
+
+
 void Odom::range_kutta()
 {
 	while(!first_wheel)	
 		sleep(1);	
 	
 	double freq = 100;
-	double x0, y0, theta0;
-	x0 = y0 = theta0 = 0;
+	double x0, y0;
+	x0 = y0 = 0;
 	
 	double xk = x0;
 	double yk = y0;
-	double thetak = theta0;
 	
 	double delta_phi_L, delta_phi_R;
 	
@@ -80,14 +100,14 @@ void Odom::range_kutta()
 			xk = xk + delta_s*cos(thetak + (delta_theta)/2.0);
 			yk = yk + delta_s*sin(thetak + (delta_theta)/2.0);
 		}
-		
+		/*
 		thetak = thetak + delta_theta;
 		
 		if(thetak >= M_PI)
 			thetak = thetak - 2*M_PI;
 			
 		else if(thetak <= -M_PI)
-			thetak = thetak + 2*M_PI;
+			thetak = thetak + 2*M_PI;*/
 		
 		//cout<<" Theta: "<<thetak<<endl;
 		

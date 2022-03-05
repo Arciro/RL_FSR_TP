@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<node pkg="zbar_ros" type="barcode_reader_node" name="barcode_reader"/>
+
+	<node pkg="ddr_pkg" type="planner" name="planner_node">
+	
+	<node pkg="ddr_pkg" type="controller" name="controller_node">
+
+</launch>

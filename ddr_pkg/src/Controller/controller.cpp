@@ -31,13 +31,14 @@ TrackReg::TrackReg()
 	time_traj = 5.0;
 	
 	odom_sub = nh.subscribe("/ddr/odom", 0, &TrackReg::odometry_callback, this);
-	path_sub = nh.subscribe("/path", 1, &TrackReg::path_callback, this);
+	//path_sub = nh.subscribe("/path", 1, &TrackReg::path_callback, this);
 	vel_pub = nh.advertise<geometry_msgs::Twist>("/ddr/cmd_vel", 1);
 	
 	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 0);
 	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 0);
 	
 	client = nh.serviceClient<ddr_pkg::ctrl_to_plan>("ctrl_finished_topic");
+	server = nh.advertiseService("plan_finished_topic", &TrackReg::path_callback, this);
 }
 
 
@@ -66,7 +67,7 @@ void TrackReg::odometry_callback(nav_msgs::Odometry odom)
 }
 
 
-
+/*
 void TrackReg::path_callback(nav_msgs::Path path_msg)
 {
 	wp_list.clear();
@@ -76,7 +77,22 @@ void TrackReg::path_callback(nav_msgs::Path path_msg)
 	
 	path_received = true;
 }
+*/
 
+bool TrackReg::path_callback(ddr_pkg::plan_to_ctrl::Request &req, ddr_pkg::plan_to_ctrl::Response &res)
+{
+	wp_list.clear();
+	
+	for(int i=0; i<req.path.poses.size(); i++)
+		wp_list.push_back(req.path.poses[i].pose.position);
+	
+	res.ctrl_run = "Il planner ha pianificato il percorso, ora il controller può partire";
+	cout<<"\n "<<res.ctrl_run<<endl;
+	path_received = true;
+	wp_index = 0;
+	
+	return true;
+}
 
 
 void TrackReg::ctrl_loop()
@@ -87,10 +103,7 @@ void TrackReg::ctrl_loop()
 	ros::Rate r(100);
 	
 	bool move = false;
-	bool finish = false;
 	bool msg2plan;
-	
-	int wp_index = 0;
 	
 	while(ros::ok())
 	{
@@ -106,7 +119,7 @@ void TrackReg::ctrl_loop()
 		double v, w;		
 		double norma, err;
 		
-		if((wp_index < wp_list.size()-1) && !finish)
+		if((wp_index < wp_list.size()-1) && path_received)
 		{
 			msg2plan = false;
 			xi = wp_list[wp_index].x;
@@ -126,7 +139,7 @@ void TrackReg::ctrl_loop()
 				move = false;
 				wp_index++;
 				if(wp_index == wp_list.size()-1)
-					finish = true;
+					path_received = false;
 			}
 		
 			if(!move && (wp_index+1 != wp_list.size()))
@@ -175,7 +188,7 @@ void TrackReg::ctrl_loop()
 		
 		else
 		{
-			cout<<" FINAL REGULATION"<<endl;
+			//cout<<" FINAL REGULATION"<<endl;
 			gamma = atan2(0, 1) - theta;
 				    
    		if (fabs(gamma) > M_PI) 
@@ -201,8 +214,6 @@ void TrackReg::ctrl_loop()
       				
       			else
 						ROS_ERROR("Fallimento nel chiamare il service");
-						
-					finish = false;
       		}
       	}
 			

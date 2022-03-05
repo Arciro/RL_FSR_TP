@@ -9,6 +9,7 @@
 #include "geometry_msgs/Quaternion.h"
 #include "geometry_msgs/TransformStamped.h"
 #include "sensor_msgs/JointState.h" 
+#include "sensor_msgs/Imu.h"
 #include "nav_msgs/Odometry.h"
 
 #include <iostream>
@@ -22,15 +23,13 @@ class Odom{
 		ros::NodeHandle nh;
 		ros::Publisher odom_pub;
 		ros::Subscriber wheels_sub;
+		ros::Subscriber imu_sub;
 		
-		double pW;
-		double d;
-		double q0L;
-		double q0R;
-		double qL;
-		double qR;
-		double wL;
-		double wR;
+		double pW, d;
+		double q0L, q0R;
+		double qL, qR;
+		double wL, wR;
+		double thetak;
 		
 		bool first_wheel;
 
@@ -39,6 +38,7 @@ class Odom{
 		void run();
 		void range_kutta();
 		void wheels_callback(const sensor_msgs::JointState::ConstPtr&);
+		void imu_callback(const sensor_msgs::Imu::ConstPtr&);
 		
 };
 

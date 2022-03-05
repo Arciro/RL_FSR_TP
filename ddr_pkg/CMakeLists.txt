@@ -69,6 +69,7 @@ find_package(catkin REQUIRED COMPONENTS
  add_service_files(
    FILES
    ctrl_to_plan.srv
+   plan_to_ctrl.srv
  )
 
 ## Generate actions in the 'action' folder

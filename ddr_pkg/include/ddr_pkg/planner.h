@@ -27,6 +27,7 @@
 #include <random> 
 
 #include "ddr_pkg/ctrl_to_plan.h"
+#include "ddr_pkg/plan_to_ctrl.h"
 
 #define MAX_NUM_ITERATIONS 10
 
@@ -72,8 +73,9 @@ class RRT_Astar
 		ros::Publisher marker_pub;
 		ros::Publisher path_pub;
 		
+		ros::ServiceClient client;
 		ros::ServiceServer server;
-		ddr_pkg::ctrl_to_plan srv;
+		ddr_pkg::ctrl_to_plan c2p_srv;
 		
 		string room;
 		
@@ -83,7 +85,6 @@ class RRT_Astar
 		int map_height;
 		int map_width;
 		Point2D current_position; //current position of the robot to give us the starting node of the rrt
-		double current_theta;
 		Point2D destination;
 		Point2D final_position;
 		
@@ -93,6 +94,7 @@ class RRT_Astar
 		bool qrcode_read;
 		bool trees_generated;
 		bool RRTend;
+		bool Astar_end;
 		float delta;
 
 		Tree trajectory;

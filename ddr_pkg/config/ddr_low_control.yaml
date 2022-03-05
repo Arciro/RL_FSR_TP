@@ -8,7 +8,7 @@ ddr:
   # Creates the /joint_states topic necessary in ROS
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 50  #rate topic /ddr/joint_states
+    publish_rate: 100  #rate topic /ddr/joint_states
 
   # Effort Controllers ---------------------------------------
   leftWheel_velocity_controller:
