@@ -82,7 +82,7 @@ void TrackReg::path_callback(nav_msgs::Path path_msg)
 bool TrackReg::path_callback(ddr_pkg::plan_to_ctrl::Request &req, ddr_pkg::plan_to_ctrl::Response &res)
 {
 	wp_list.clear();
-	
+	//cout<<"\n NELLA CALBACK CI ENTRI IMMEDIATAMENTE?"<<endl;
 	for(int i=0; i<req.path.poses.size(); i++)
 		wp_list.push_back(req.path.poses[i].pose.position);
 	
@@ -97,9 +97,9 @@ bool TrackReg::path_callback(ddr_pkg::plan_to_ctrl::Request &req, ddr_pkg::plan_
 
 void TrackReg::ctrl_loop()
 {
-	while(!first_odom && !path_received)	
+	while((!first_odom) || (!path_received))	
 		sleep(1);
-
+	//cout<<"\n CICLO INIZIA SUBITO?"<<endl;
 	ros::Rate r(100);
 	
 	bool move = false;
@@ -128,11 +128,11 @@ void TrackReg::ctrl_loop()
 			yf = wp_list[wp_index+1].y;
 		
 			norma = sqrt(pow(xf-xi, 2) + pow(yf-yi, 2));
-			err = sqrt( pow(xf-y1, 2) + pow(yf-y2, 2) );
-			cout<<"\n ERR: "<<fabs(err)<<endl;
+			err = sqrt( pow(xf-y1, 2) + pow(yf-y2, 2));
+	/*		cout<<"\n ERR: "<<fabs(err)<<endl;
 			cout<<" INDEX: "<<wp_index<<endl;
 			cout<<" T: "<<t<<endl;
-			cout<<" DIM WP LIST: "<<wp_list.size()<<endl;
+			cout<<" DIM WP LIST: "<<wp_list.size()<<endl;*/
 		
 			if(fabs(err)<0.05 && t>=time_traj)
 			{
@@ -144,7 +144,7 @@ void TrackReg::ctrl_loop()
 		
 			if(!move && (wp_index+1 != wp_list.size()))
 			{
-				cout<<" REGULATION"<<endl;
+			//	cout<<" REGULATION"<<endl;
 				gamma = atan2(wp_list[wp_index+1].y - wp_list[wp_index].y, wp_list[wp_index+1].x - wp_list[wp_index].x) - theta;
 				    
    			if (fabs(gamma) > M_PI) 
@@ -166,7 +166,7 @@ void TrackReg::ctrl_loop()
 		
 			else
 			{
-				cout<<" TRACKING"<<endl;
+			//	cout<<" TRACKING"<<endl;
 				tvp(0, norma, time_traj, s, s_dot);
 		
 				y1d = xi + s*(xf-xi)/norma;
@@ -202,10 +202,12 @@ void TrackReg::ctrl_loop()
 			v = 0.0;
       	w = reg_k2*gamma + reg_k1*sin(gamma)*cos(gamma);
       	
-      	if(fabs(w) < 0.01)
+      	double fin_err = sqrt(pow(wp_list[wp_list.size()-1].y - y2, 2) + pow(wp_list[wp_list.size()-1].x - y1, 2));
+      	if((fabs(theta) < 0.05) && (fabs(fin_err) < 0.05))
       	{
       		if(!msg2plan)
       		{
+      			//cout<<"\n MA QUI QUANTE VOLTE CI ENTRI?"<<endl;
       			msg2plan = true;
       			ddr_pkg::ctrl_to_plan srv;
       			srv.request.goal_achieved = true;

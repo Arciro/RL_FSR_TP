@@ -75,7 +75,6 @@ class RRT_Astar
 		
 		ros::ServiceClient client;
 		ros::ServiceServer server;
-		ddr_pkg::ctrl_to_plan c2p_srv;
 		
 		string room;
 		
@@ -95,6 +94,7 @@ class RRT_Astar
 		bool trees_generated;
 		bool RRTend;
 		bool Astar_end;
+		bool ctrl_end;
 		float delta;
 
 		Tree trajectory;

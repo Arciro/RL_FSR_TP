@@ -40,15 +40,15 @@ void RRT_Astar::generate_tree(Tree& albero)
 	do{
 		q_rand.x = dist(rd);
 		q_rand.y = dist(rd);
-		cout<<"<--- q_rand --->"<<endl;
+	/*	cout<<"<--- q_rand --->"<<endl;
 		cout<<" x: "<<q_rand.x<<endl;
-		cout<<" y: "<<q_rand.y<<endl<<endl;
+		cout<<" y: "<<q_rand.y<<endl<<endl;*/
 
 		find_qnear(q_rand, q_near, albero);
-		cout<<"<--- q_near --->"<<endl;
+		/*cout<<"<--- q_near --->"<<endl;
 		cout<<" ID: "<<q_near.id<<endl;
 		cout<<" x: "<<q_near.position.x<<endl;
-		cout<<" y: "<<q_near.position.y<<endl<<endl;
+		cout<<" y: "<<q_near.position.y<<endl<<endl;*/
 
 		if(counter > MAX_NUM_ITERATIONS)
 			q_new.id = 200 - MAX_NUM_ITERATIONS + counter; 
@@ -63,10 +63,10 @@ void RRT_Astar::generate_tree(Tree& albero)
 	
 	q_new.visited = false;
 	q_new.adj_list.push_back(q_near.id);
-	cout<<"<--- q_new --->"<<endl;
+/*	cout<<"<--- q_new --->"<<endl;
 	cout<<" ID: "<<q_new.id<<endl;
 	cout<<" x: "<<q_new.position.x<<endl;
-	cout<<" y: "<<q_new.position.y<<endl<<endl;
+	cout<<" y: "<<q_new.position.y<<endl<<endl;*/
 	albero.push_back(q_new);
 				
 	for(int i=0; i<albero.size(); i++)

@@ -16,7 +16,7 @@ RRT_Astar::RRT_Astar()
 	map_received = false;
 	trees_generated = false;
 	qrcode_read = false;
-	c2p_srv.request.goal_achieved = false;
+	ctrl_end = false;
 	
 	map_height = 608;
 	map_width = 512;
@@ -91,9 +91,10 @@ bool RRT_Astar::ctrl2plan_callback(ddr_pkg::ctrl_to_plan::Request &req, ddr_pkg:
 {
 	res.plan_run = "Dato che il controller ha finito, il planner puo' ripartire";
 	if(req.goal_achieved)
+	{
 		cout<<"\n "<<res.plan_run<<endl;
-
-	c2p_srv.request.goal_achieved = req.goal_achieved;
+		ctrl_end = true;
+	}
 	
 	return true;
 }
@@ -112,24 +113,23 @@ void RRT_Astar::planner()
 	Nodo qs; //start configuration
 	Nodo qg; //goal configuration
 	
-	final_position.x = destination.x;
-	final_position.y = destination.y;
+	final_position = destination;
 	
 	while(ros::ok())
 	{		
 		if(qrcode_read)
 		{
 			qrcode_read = false;
-			if(c2p_srv.request.goal_achieved)
+			if(ctrl_end)
 			{
 				cout<<" Obiettivo raggiunto"<<endl;
-				c2p_srv.request.goal_achieved = false;
+				ctrl_end = false;
 				final_position = destination;
-				cout<<" Punto finale: "<<final_position.x<<" "<<qg.position.y<<endl;
+				cout<<" Punto finale: "<<final_position.x<<" "<<final_position.y<<endl;
 				counter = 0;
 			}
 		}
-	
+		
 		if(counter == 0)
 		{
 			Ts.clear();

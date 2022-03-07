@@ -35,7 +35,7 @@ void RRT_Astar::Astar_search(Tree& N)
 		find_extract_Nbest(N_best, OPEN); //ﬁnd and extract N best from OPEN
 		for(int s=0; s<T.size(); s++)
 			//if(T[s].parent != 0)
-				cout<<T[s].id<<endl;
+			//	cout<<T[s].id<<endl;
 		
 		if(N_best.id == Ng.id)
 		{
@@ -50,7 +50,7 @@ void RRT_Astar::Astar_search(Tree& N)
 				if(N_best.adj_list[m] == N[j].id)
 				{
 					i = j;
-					cout<<" Id vicino: "<<N_best.adj_list[m]<<endl;	
+					//cout<<" Id vicino: "<<N_best.adj_list[m]<<endl;	
 				}	
 			}
 			
@@ -64,12 +64,12 @@ void RRT_Astar::Astar_search(Tree& N)
 				N[i].visited = true; //mark Ni visited
 				T.push_back(N[i]); //add Ni to T with a pointer toward Nbest
 				OPEN.push_back(N[i]); //insert Ni in OPEN
-				cout<<"Ni: "<<N[i].id<<endl;
+			/*	cout<<"Ni: "<<N[i].id<<endl;
 				cout<<"Visited: "<<N[i].visited<<endl;
 				cout<<"Nbest: "<<N_best.id<<endl;
 				cout<<"Ni parent: "<<N[i].parent->id<<endl;
 				cout<<"g(Ni): "<<gCost(N[i])<<endl<<endl;
-				cout<<"f(Ni): "<<fCost(N[i])<<endl<<endl;	
+				cout<<"f(Ni): "<<fCost(N[i])<<endl<<endl;	*/
 			}
 			
 			
