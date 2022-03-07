@@ -71,8 +71,8 @@ void RRT_Astar::barcode_callback(const std_msgs::String::Ptr& qrcode)
 	
 	if(room == "r1")
 	{
-		destination.x = 1.2;
-		destination.y = 4.0;
+		destination.x = 1.1;
+		destination.y = 3.5;
 	//	cout<<" ROOM 1"<<endl;
 	}
 	
