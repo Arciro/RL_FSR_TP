@@ -3,7 +3,8 @@
 RRT_Astar::RRT_Astar()
 {
 	counter = 0;
-	delta = 0.8;
+	if (!nh.getParam("delta", delta))
+		delta = 0.8;
 	
 	current_position.x = 0.0;
 	current_position.y = 0.0;
@@ -196,22 +197,22 @@ void RRT_Astar::planner()
 				ROS_ERROR("Fallimento nel chiamare il service");
 			
 			Astar_end = false;	
-		}/*
-		nav_msgs::Path path;
+		}
+	/*	nav_msgs::Path path_graph;
 		
-		for(int k=1; k<=trajectory.size(); k++)
+		for(int j=1; j<=trajectory.size(); j++)
 		{
-			geometry_msgs::PoseStamped wp;
+			geometry_msgs::PoseStamped wp_pub;
 			
-			wp.pose.position.x = trajectory[trajectory.size()-k].position.x;
-			wp.pose.position.y = trajectory[trajectory.size()-k].position.y;
-			wp.pose.position.z = 0;
+			wp_pub.pose.position.x = trajectory[trajectory.size()-j].position.x;
+			wp_pub.pose.position.y = trajectory[trajectory.size()-j].position.y;
+			wp_pub.pose.position.z = 0;
 			
-			path.poses.push_back(wp);
+			path_graph.poses.push_back(wp_pub);
 		}
 
 		
-		path_pub.publish(path);*/
+		path_pub.publish(path_graph);*/
 
 		r.sleep();
 	}

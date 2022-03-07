@@ -32,6 +32,7 @@ class TrackReg
 		ros::Publisher vel_pub;
 		ros::Publisher wR_pub;
 		ros::Publisher wL_pub;
+		ros::Publisher wp_pub;
 		ros::ServiceClient client;
 		ros::ServiceServer server;
 		
@@ -69,6 +70,7 @@ class TrackReg
 		void tvp(double, double, double, double&, double&); //trapezoidal velocity profile
 		
 		void ctrl_loop();
+		//void graphic_loop();
 		void run();
 	
 };

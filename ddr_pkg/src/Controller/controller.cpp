@@ -33,6 +33,7 @@ TrackReg::TrackReg()
 	odom_sub = nh.subscribe("/ddr/odom", 0, &TrackReg::odometry_callback, this);
 	//path_sub = nh.subscribe("/path", 1, &TrackReg::path_callback, this);
 	vel_pub = nh.advertise<geometry_msgs::Twist>("/ddr/cmd_vel", 1);
+	wp_pub = nh.advertise<geometry_msgs::Pose2D>("/way_points", 1);
 	
 	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 0);
 	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 0);
@@ -82,7 +83,7 @@ void TrackReg::path_callback(nav_msgs::Path path_msg)
 bool TrackReg::path_callback(ddr_pkg::plan_to_ctrl::Request &req, ddr_pkg::plan_to_ctrl::Response &res)
 {
 	wp_list.clear();
-	//cout<<"\n NELLA CALBACK CI ENTRI IMMEDIATAMENTE?"<<endl;
+	
 	for(int i=0; i<req.path.poses.size(); i++)
 		wp_list.push_back(req.path.poses[i].pose.position);
 	
@@ -99,17 +100,18 @@ void TrackReg::ctrl_loop()
 {
 	while((!first_odom) || (!path_received))	
 		sleep(1);
-	//cout<<"\n CICLO INIZIA SUBITO?"<<endl;
+	
 	ros::Rate r(100);
 	
 	bool move = false;
 	bool msg2plan;
 	
-	while(ros::ok())
-	{
-		double xi, xf, yi, yf;
-		double s, s_dot;
+	geometry_msgs::Pose2D p;
+	double xi, xf, yi, yf;
+	double s, s_dot;
 	
+	while(ros::ok())
+	{	
 		double y1d, y2d;
 		double dot_y1d, dot_y2d;
 		double u1, u2;
@@ -146,7 +148,8 @@ void TrackReg::ctrl_loop()
 			{
 			//	cout<<" REGULATION"<<endl;
 				gamma = atan2(wp_list[wp_index+1].y - wp_list[wp_index].y, wp_list[wp_index+1].x - wp_list[wp_index].x) - theta;
-				    
+				p.theta = gamma;
+				
    			if (fabs(gamma) > M_PI) 
   				{
 					if(gamma > 0.0) 
@@ -158,7 +161,7 @@ void TrackReg::ctrl_loop()
 				v = 0.0;
       		w = reg_k2*gamma + reg_k1*sin(gamma)*cos(gamma);
       	
-      		if(fabs(gamma) < 0.15)
+      		if(fabs(gamma) < 0.1)
       			move = true;
 			
 				t = 0.0;
@@ -171,6 +174,8 @@ void TrackReg::ctrl_loop()
 		
 				y1d = xi + s*(xf-xi)/norma;
 				y2d = yi + s*(yf-yi)/norma;
+				p.x = y1d;
+				p.y = y2d;
 			
 				dot_y1d = s_dot*(xf-xi)/norma;
 				dot_y2d = s_dot*(yf-yi)/norma;
@@ -183,7 +188,6 @@ void TrackReg::ctrl_loop()
 			
 				t += 0.01;
 			}
-			
 		}
 		
 		else
@@ -230,7 +234,8 @@ void TrackReg::ctrl_loop()
 		
 		wR_pub.publish(wR);
 		wL_pub.publish(wL);
-		
+		wp_pub.publish(p);
+
 		/*
 		geometry_msgs::Twist cmd;
 		cmd.linear.x = v;
@@ -239,11 +244,35 @@ void TrackReg::ctrl_loop()
 		r.sleep();
 	}
 }
+/*
 
+void TrackReg::graphic_loop()
+{
+	while((!first_odom) || (!path_received))	
+		sleep(1);
+		
+	ros::Rate r(1/time_traj);
+	int cont = 0;
+	while(ros::ok())
+	{
+		if(cont == wp_list.size())
+			cont = 0;
+			
+		geometry_msgs::Point punto;
+		punto = wp_list[cont];
+		
+		cont++;
+		graph_pub.publish(punto);
+		r.sleep();
+	}
+
+}
+*/
 
 void TrackReg::run()
 {
 	boost::thread controller_thread(&TrackReg::ctrl_loop, this);
+	//boost::thread graphic_thread(&TrackReg::graphic_loop, this);
 
 	ros::spin();
 }
