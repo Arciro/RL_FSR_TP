@@ -32,10 +32,11 @@ class TrackReg
 		ros::Publisher vel_pub;
 		ros::Publisher wR_pub;
 		ros::Publisher wL_pub;
-		ros::Publisher wp_pub;
+		ros::Publisher err_pub;
 		ros::ServiceClient client;
 		ros::ServiceServer server;
 		
+		geometry_msgs::Pose2D posa;
 		double theta;
 		
 		bool first_odom;

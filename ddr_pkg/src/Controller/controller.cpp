@@ -33,7 +33,7 @@ TrackReg::TrackReg()
 	odom_sub = nh.subscribe("/ddr/odom", 0, &TrackReg::odometry_callback, this);
 	//path_sub = nh.subscribe("/path", 1, &TrackReg::path_callback, this);
 	vel_pub = nh.advertise<geometry_msgs::Twist>("/ddr/cmd_vel", 1);
-	wp_pub = nh.advertise<geometry_msgs::Pose2D>("/way_points", 1);
+	err_pub = nh.advertise<geometry_msgs::Pose2D>("/errore_topic", 1);
 	
 	wR_pub = nh.advertise<std_msgs::Float64>("/ddr/rightWheel_velocity_controller/command", 0);
 	wL_pub = nh.advertise<std_msgs::Float64>("/ddr/leftWheel_velocity_controller/command", 0);
@@ -45,9 +45,7 @@ TrackReg::TrackReg()
 
 
 void TrackReg::odometry_callback(nav_msgs::Odometry odom)
-{	
-	geometry_msgs::Pose2D posa;
-	
+{		
 	posa.x = odom.pose.pose.position.x;
 	posa.y = odom.pose.pose.position.y;
 	
@@ -106,16 +104,16 @@ void TrackReg::ctrl_loop()
 	bool move = false;
 	bool msg2plan;
 	
-	geometry_msgs::Pose2D p;
+	geometry_msgs::Pose2D errore;
 	double xi, xf, yi, yf;
 	double s, s_dot;
 	
-	while(ros::ok())
-	{	
-		double y1d, y2d;
-		double dot_y1d, dot_y2d;
-		double u1, u2;
+	double y1d, y2d;
+	double dot_y1d, dot_y2d;
+	double u1, u2;
 	
+	while(ros::ok())
+	{		
 		double gamma;
 		
 		double v, w;		
@@ -148,7 +146,6 @@ void TrackReg::ctrl_loop()
 			{
 			//	cout<<" REGULATION"<<endl;
 				gamma = atan2(wp_list[wp_index+1].y - wp_list[wp_index].y, wp_list[wp_index+1].x - wp_list[wp_index].x) - theta;
-				p.theta = gamma;
 				
    			if (fabs(gamma) > M_PI) 
   				{
@@ -157,6 +154,8 @@ void TrackReg::ctrl_loop()
       			else 
       				gamma = gamma + 2*M_PI;
 				}	
+				
+				errore.theta = gamma;
 
 				v = 0.0;
       		w = reg_k2*gamma + reg_k1*sin(gamma)*cos(gamma);
@@ -174,8 +173,8 @@ void TrackReg::ctrl_loop()
 		
 				y1d = xi + s*(xf-xi)/norma;
 				y2d = yi + s*(yf-yi)/norma;
-				p.x = y1d;
-				p.y = y2d;
+				errore.x = y1d-posa.x;
+				errore.y = y2d-posa.y;
 			
 				dot_y1d = s_dot*(xf-xi)/norma;
 				dot_y2d = s_dot*(yf-yi)/norma;
@@ -211,7 +210,6 @@ void TrackReg::ctrl_loop()
       	{
       		if(!msg2plan)
       		{
-      			//cout<<"\n MA QUI QUANTE VOLTE CI ENTRI?"<<endl;
       			msg2plan = true;
       			ddr_pkg::ctrl_to_plan srv;
       			srv.request.goal_achieved = true;
@@ -234,7 +232,7 @@ void TrackReg::ctrl_loop()
 		
 		wR_pub.publish(wR);
 		wL_pub.publish(wL);
-		wp_pub.publish(p);
+		err_pub.publish(errore);
 
 		/*
 		geometry_msgs::Twist cmd;

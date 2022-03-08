@@ -6,7 +6,7 @@ material QR/Code_8cm
 		{
 			texture_unit
 			{
-				texture qrcode_r1.png
+				texture r2.png
 			}
 		}
 	}
