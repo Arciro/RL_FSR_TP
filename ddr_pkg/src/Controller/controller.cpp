@@ -31,7 +31,6 @@ TrackReg::TrackReg()
 	time_traj = 5.0;
 	
 	odom_sub = nh.subscribe("/ddr/odom", 0, &TrackReg::odometry_callback, this);
-	//path_sub = nh.subscribe("/path", 1, &TrackReg::path_callback, this);
 	vel_pub = nh.advertise<geometry_msgs::Twist>("/ddr/cmd_vel", 1);
 	err_pub = nh.advertise<geometry_msgs::Pose2D>("/errore_topic", 1);
 	
@@ -66,17 +65,6 @@ void TrackReg::odometry_callback(nav_msgs::Odometry odom)
 }
 
 
-/*
-void TrackReg::path_callback(nav_msgs::Path path_msg)
-{
-	wp_list.clear();
-	
-	for(int i=0; i<path_msg.poses.size(); i++)
-		wp_list.push_back(path_msg.poses[i].pose.position);
-	
-	path_received = true;
-}
-*/
 
 bool TrackReg::path_callback(ddr_pkg::plan_to_ctrl::Request &req, ddr_pkg::plan_to_ctrl::Response &res)
 {
@@ -234,43 +222,16 @@ void TrackReg::ctrl_loop()
 		wL_pub.publish(wL);
 		err_pub.publish(errore);
 
-		/*
-		geometry_msgs::Twist cmd;
-		cmd.linear.x = v;
-		cmd.angular.z = w;
-		vel_pub.publish(cmd);*/
+
 		r.sleep();
 	}
 }
-/*
 
-void TrackReg::graphic_loop()
-{
-	while((!first_odom) || (!path_received))	
-		sleep(1);
-		
-	ros::Rate r(1/time_traj);
-	int cont = 0;
-	while(ros::ok())
-	{
-		if(cont == wp_list.size())
-			cont = 0;
-			
-		geometry_msgs::Point punto;
-		punto = wp_list[cont];
-		
-		cont++;
-		graph_pub.publish(punto);
-		r.sleep();
-	}
 
-}
-*/
 
 void TrackReg::run()
 {
 	boost::thread controller_thread(&TrackReg::ctrl_loop, this);
-	//boost::thread graphic_thread(&TrackReg::graphic_loop, this);
 
 	ros::spin();
 }

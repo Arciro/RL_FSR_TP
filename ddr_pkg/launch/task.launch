@@ -7,5 +7,7 @@
 	<node pkg="ddr_pkg" type="planner" name="planner_node"/>
 	
 	<node pkg="ddr_pkg" type="controller" name="controller_node"/>
+	
+	<node pkg="rqt_multiplot" type="rqt_multiplot" name="rqt_multiplot"/>
 
 </launch>

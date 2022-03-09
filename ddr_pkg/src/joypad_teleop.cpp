@@ -9,8 +9,6 @@ class TeleopJoypad
 	public:
   		TeleopJoypad();
   		void joypadCallback(const sensor_msgs::Joy::ConstPtr& joy);
-  		void teleop();
-		void run();
   
   	private:
   		ros::NodeHandle nh;
@@ -21,7 +19,6 @@ class TeleopJoypad
   		int linear_, angular_;
   		double l_scale_, a_scale_;
   		double d, pW;
-  		double v, w;
 };
 
 
@@ -47,9 +44,9 @@ TeleopJoypad::TeleopJoypad()
 
 void TeleopJoypad::joypadCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {	
-	v = l_scale_*joy->axes[linear_];
-	w = a_scale_*joy->axes[angular_];
-	/*
+	double v = l_scale_*joy->axes[linear_];
+	double w = a_scale_*joy->axes[angular_];
+	
 	std_msgs::Float64 wR; //angular velocity of right wheel
 	std_msgs::Float64 wL; //angular velocity of left wheel
 	wR.data = (2*v + d*w)/(2*pW);
@@ -57,44 +54,16 @@ void TeleopJoypad::joypadCallback(const sensor_msgs::Joy::ConstPtr& joy)
 		
 	wR_pub.publish(wR);
 	wL_pub.publish(wL);
-	twist.angular.z = 
-	twist.linear.x = 
-	twist_pub.publish(twist);*/
 }
 
-
-void TeleopJoypad::teleop()
-{
-	ros::Rate r(100);
-
-	while(ros::ok())
-	{
-		std_msgs::Float64 wR; //angular velocity of right wheel
-		std_msgs::Float64 wL; //angular velocity of left wheel
-		wR.data = (2*v + d*w)/(2*pW);
-		wL.data = (2*v - d*w)/(2*pW);
-		
-		wR_pub.publish(wR);
-		wL_pub.publish(wL);
-		r.sleep();
-	}
-
-}
-
- 
-void TeleopJoypad::run()
-{
-	boost::thread teleop_thread(&TeleopJoypad::teleop, this);
-	
-	ros::spin();
-}
 
 
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "ddr_joypad_node");
   TeleopJoypad teleop_joypad_ddr;
-  teleop_joypad_ddr.run();
 
-  return 0; //ros::spin();
+  ros::spin();
+  
+  return 0;
 }

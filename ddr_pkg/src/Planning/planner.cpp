@@ -33,7 +33,6 @@ RRT_Astar::RRT_Astar()
 	map_sub = nh.subscribe("/map", 1, &RRT_Astar::map_callback, this);
 	barcode_sub = nh.subscribe("/barcode", 1, &RRT_Astar::barcode_callback, this);
 	
-	//path_pub = nh.advertise<nav_msgs::Path>("/path", 1);
 	array_marker_pub = nh.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 1);
 	marker_pub = nh.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 	
@@ -74,14 +73,12 @@ void RRT_Astar::barcode_callback(const std_msgs::String::Ptr& qrcode)
 	{
 		destination.x = 1.1;
 		destination.y = 3.5;
-	//	cout<<" ROOM 1"<<endl;
 	}
 	
 	else if(room == "r2")
 	{
 		destination.x = -1.0;
 		destination.y = 4.0;
-		cout<<" ROOM 2"<<endl;
 	}
 
 	qrcode_read = true;
@@ -198,21 +195,6 @@ void RRT_Astar::planner()
 			
 			Astar_end = false;	
 		}
-	/*	nav_msgs::Path path_graph;
-		
-		for(int j=1; j<=trajectory.size(); j++)
-		{
-			geometry_msgs::PoseStamped wp_pub;
-			
-			wp_pub.pose.position.x = trajectory[trajectory.size()-j].position.x;
-			wp_pub.pose.position.y = trajectory[trajectory.size()-j].position.y;
-			wp_pub.pose.position.z = 0;
-			
-			path_graph.poses.push_back(wp_pub);
-		}
-
-		
-		path_pub.publish(path_graph);*/
 
 		r.sleep();
 	}
