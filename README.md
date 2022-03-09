@@ -28,7 +28,7 @@ Afterwards compile the code
 ## Running simulation 
 Let's start to spawn robot in Gazebo within the scenario and QR-code. So open a new terminal and type in
 ```shell 
-	roslaunch ddr_pkg spawn_gazebo.launch
+roslaunch ddr_pkg spawn_gazebo.launch
 ```
 in this way, controllers and some parameters will be loaded. Then let's run Odometry custom node, AMCL and open RViz to visualize robot frame, map and markers during the task. In order to do this, type
 ```shell 
