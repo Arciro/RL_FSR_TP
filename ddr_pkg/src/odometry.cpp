@@ -100,14 +100,6 @@ void Odom::range_kutta()
 			xk = xk + delta_s*cos(thetak + (delta_theta)/2.0);
 			yk = yk + delta_s*sin(thetak + (delta_theta)/2.0);
 		}
-		/*
-		thetak = thetak + delta_theta;
-		
-		if(thetak >= M_PI)
-			thetak = thetak - 2*M_PI;
-			
-		else if(thetak <= -M_PI)
-			thetak = thetak + 2*M_PI;*/
 		
 		//cout<<" Theta: "<<thetak<<endl;
 		
