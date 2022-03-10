@@ -38,3 +38,6 @@ Finally, run planner and controller nodes, along node to read QR-codes, typing
 ```shell 
 roslaunch ddr_pkg task.launch
 ```
+
+**Note**: if you want to change QR-code, you have to edit png image name in the file qrcode_8cm.material, which you can find at the
+path `ddr_pkg/models/QR_Code/material/scripts`
